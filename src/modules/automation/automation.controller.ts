@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { AutomationService } from './service/automation.service';
 import { AutomationOnOffDto } from './models/automation-on-off.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -23,15 +23,17 @@ export class AutomationController {
   }
 
   @Post('on-off')
-  async onOff(@Body() automationOnOff: AutomationOnOffDto) { // DMR_EVT_OnOff
+  async onOff(@Body() automationOnOff: AutomationOnOffDto, @Query() query) { // DMR_EVT_OnOff
     const { onOff, deviceId } = automationOnOff
+    const { api } = query
 
     const transId = this.Random(500)
     const res = await this.automationService.onOff(
       this.MakeObjectRpc('DMR_EVT_OnOff', transId, {
         devId: deviceId,
         onOff: onOff
-      }))
+      }), api)
+
     return res.data
   }
 
@@ -40,15 +42,17 @@ export class AutomationController {
     type: DeviceListsDto,
   })
   @Get('devices')
-  async devices() { // DMR_DevList_Get
+  async devices(@Query() query) { // DMR_DevList_Get
     const transId = this.Random(500)
+    const { api } = query
 
     const res = await this.automationService.devices(
       this.MakeObjectRpc('DMR_DevList_Get', transId, {
         devType: 65535,
         startIndex: 1,
         maxItems: 10
-      }))
+      }), api)
+
     return res.data
   }
 }

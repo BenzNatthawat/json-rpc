@@ -1,17 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
 export class AutomationService {
 
-  async onOff(data: any) {
-    console.log(process.env.SCHNIDER_API)
-    return await axios.post(process.env.SCHNIDER_API, data)
+  async onOff(data: any, api?: string) {
+    try {
+      return await axios.post(api ? api : process.env.SCHNIDER_API, data)
+    } catch (error) {
+      throw new BadGatewayException({
+        data: {
+          url: error?.config?.url,
+          data: error?.config?.data
+        }
+      })
+    }
   }
 
-  async devices(data: any) {
-    console.log(process.env.SCHNIDER_API)
-    return await axios.post(process.env.SCHNIDER_API, data)
+  async devices(data: any, api?: string) {
+    try {
+      return await axios.post(api ? api : process.env.SCHNIDER_API, data)
+    } catch (error) {
+      throw new BadGatewayException({
+        data: {
+          url: error?.config?.url,
+          data: error?.config?.data
+        }
+      })
+    }
   }
 
 }

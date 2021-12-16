@@ -2,10 +2,13 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AutomationModule } from './modules/automation/automation.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [AutomationModule],
+  imports: [
+    ConfigModule.forRoot(),
+    AutomationModule],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
