@@ -5,12 +5,13 @@ import axios from 'axios';
 export class AutomationService {
 
   async onOff(data: any) {
-    return await axios.post('127.0.0.1:9090', data).then(response => response).catch(error => error);
+    console.log(process.env.SCHNIDER_API)
+    return await axios.post(process.env.SCHNIDER_API, data)
   }
 
   async devices(data: any) {
-    console.log(data)
-    return await axios.post('127.0.0.1:9090', data).then(response => response).catch(error => error);
+    console.log(process.env.SCHNIDER_API)
+    return await axios.post(process.env.SCHNIDER_API, data)
   }
 
 }

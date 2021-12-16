@@ -3,7 +3,6 @@ import { AutomationService } from './service/automation.service';
 import { AutomationOnOffDto } from './models/automation-on-off.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { DeviceListsDto } from './models/device-lists.dto';
-import axios from 'axios';
 
 @ApiTags('automation')
 @Controller('automation')
@@ -12,10 +11,10 @@ export class AutomationController {
 
   MakeObjectRpc(method: string, transId: number, params: any) {
     return {
-      "rpcVer": "3.0",
-      "method": method,
-      "params": params,
-      "transId": transId
+      rpcVer: "3.0",
+      method: method,
+      params: params,
+      transId: transId
     }
   }
 
@@ -28,12 +27,12 @@ export class AutomationController {
     const { onOff, deviceId } = automationOnOff
 
     const transId = this.Random(500)
-    const res = this.automationService.onOff(
+    const res = await this.automationService.onOff(
       this.MakeObjectRpc('DMR_EVT_OnOff', transId, {
         devId: deviceId,
         onOff: onOff
       }))
-    return res
+    return res.data
   }
 
   @ApiResponse({
@@ -44,12 +43,12 @@ export class AutomationController {
   async devices() { // DMR_DevList_Get
     const transId = this.Random(500)
 
-    const res = this.automationService.devices(
+    const res = await this.automationService.devices(
       this.MakeObjectRpc('DMR_DevList_Get', transId, {
         devType: 65535,
         startIndex: 1,
         maxItems: 10
       }))
-    return res
+    return res.data
   }
 }
